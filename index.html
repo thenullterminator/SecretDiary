@@ -59,7 +59,7 @@
 
     #subcontent
     {
-        width:45%;
+        width:74%;
         font-weight:bold;
         margin:0 auto !important;
         font-size:1vw;
@@ -77,6 +77,17 @@
     color: black !important;
     font-size:0.7vw;
 }
+    #signincontent
+    {
+      width:44%;
+    }
+
+    a
+    {
+      color:#0069D9 !important;
+      font-weight:bold;
+      cursor: pointer;
+    }
 
     </style>
 
@@ -89,15 +100,16 @@
                 <p></p>
                 <div id="subtitle">Store your thoughts permanently and securely.</div>
                 <p></p><br>
-                <div id="subcontent">Interested ? Sign up Now!</div>
+                <div id="subcontent"> <span id="signupcontent">Interested ? Sign up Now!</span> <span id="signincontent" style="display:none;" >Log In using your username and password</span></div>
                 <br>
-                <div class="form-group">
-                    <input type="text" class="form-control" id="username" name="username" aria-describedby="emailHelp" placeholder="username">
+                
+                    <input type="text" class="form-control" id="username" name="username" aria-describedby="emailHelp" placeholder="Username">
                    <p></p><br>
                   <!-- <label for="exampleInputEmail1">Email address</label> -->
+                  <div class="form-group" id="signupdetails">
                   <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="Your email">
                   <small id="emailHelp" class="form-text text-muted" style="text-align:left;color:black">We'll never share your email with anyone else.</small>
-                </div>
+                  </div>
                 <div class="form-group">
                   <!-- <label for="exampleInputPassword1">Password</label> -->
                   <input type="password" class="form-control" name="password" id="password" placeholder="Password">
@@ -110,7 +122,7 @@
                 <br>
                 <button type="submit" class="btn btn-primary" id="submit">Sign Up!</button>
                 <p></p>
-                <a href="">Log In.</a>
+                <a id="login" >Log In.</a><a id="signup" style="display:none;" >Sign Up.</a>
                 <p></p>
 
                 <div id="error"></div>
@@ -127,6 +139,26 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script type="text/JavaScript">
          
+         
+              
+      $("#login").click(function()
+      {
+          $("#signupdetails").toggle();
+          $("#login").toggle();
+          $("#signup").toggle();
+          $("#signupcontent").toggle();
+          $("#signincontent").toggle();
+      });
+        
+      $("#signup").click(function()
+      {
+          $("#signupdetails").toggle();
+          $("#login").toggle();
+          $("#signup").toggle();
+          $("#signupcontent").toggle();
+          $("#signincontent").toggle();
+      });
+      
       $("form").submit(function () {
         
        var error="";
@@ -134,7 +166,7 @@
        {
          error+="> Please Enter a Username.<br>";
        }
-       if($("#email").val()=='')
+       if($("#email").val()=='' && $("#email").is(":visible"))
        {
          error+="> Please Enter a E-Mail Address.<br>";
        }
