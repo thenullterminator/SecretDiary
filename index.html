@@ -27,6 +27,7 @@
 
     body{
         background:none;
+        overflow-y:hidden;
     }
     h1{
         backdrop-filter: blur(10px);
@@ -43,7 +44,7 @@
 
     #title
     {
-        width:42%;
+        width:44%;
         font-weight:bold;
         margin:0 auto !important;
         font-size:2vw;
@@ -91,6 +92,8 @@
                 <div id="subcontent">Interested ? Sign up Now!</div>
                 <br>
                 <div class="form-group">
+                    <input type="text" class="form-control" id="username" name="username" aria-describedby="emailHelp" placeholder="username">
+                   <p></p><br>
                   <!-- <label for="exampleInputEmail1">Email address</label> -->
                   <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="Your email">
                   <small id="emailHelp" class="form-text text-muted" style="text-align:left;color:black">We'll never share your email with anyone else.</small>
@@ -127,6 +130,10 @@
       $("form").submit(function () {
         
        var error="";
+       if($("#username").val()=='')
+       {
+         error+="> Please Enter a Username.<br>";
+       }
        if($("#email").val()=='')
        {
          error+="> Please Enter a E-Mail Address.<br>";
