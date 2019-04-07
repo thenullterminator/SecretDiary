@@ -120,7 +120,7 @@
                   <label class="form-check-label" for="exampleCheck1"> Stay Logged in.</label>
                 </div>
                 <br>
-                <button type="submit" class="btn btn-primary" id="submit">Sign Up!</button>
+                <button type="submit" class="btn btn-primary" id="submit"><span id="signupbutton">Sign Up!</span> <span id="signinbutton" style="display:none;" >Log In!</span></button>
                 <p></p>
                 <a id="login" >Log In.</a><a id="signup" style="display:none;" >Sign Up.</a>
                 <p></p>
@@ -148,6 +148,8 @@
           $("#signup").toggle();
           $("#signupcontent").toggle();
           $("#signincontent").toggle();
+          $("#signinbutton").toggle();
+          $("#signupbutton").toggle();
       });
         
       $("#signup").click(function()
@@ -157,6 +159,8 @@
           $("#signup").toggle();
           $("#signupcontent").toggle();
           $("#signincontent").toggle();
+          $("#signinbutton").toggle();
+          $("#signupbutton").toggle();
       });
       
       $("form").submit(function () {
