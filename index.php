@@ -1,4 +1,139 @@
-<!doctype html>
+
+<?php
+
+$error='';$success='';
+
+if($_POST)
+{
+    
+    if($_POST['signinup']==1 && !$_POST['email'])
+    $error=$error."> Please Enter email address<br>";
+    
+    if ($_POST['signinup']==1 && (!filter_var($_POST['email'],FILTER_VALIDATE_EMAIL)) && $_POST['email']) 
+    $error=$error. "> Invalid Email Address<br>";   
+    
+    if(!$_POST['username'])
+    $error=$error."> Username is required<br>";
+    
+    if(!$_POST['password'])
+    $error=$error."> Password is required<br>";
+    
+    if($error!="")
+    $error='<div class="alert alert-danger" role="alert"><b>'.$error.'</b></div>';
+    else
+    {    
+        
+        $link =mysqli_connect("localhost","dhairyaj_djp2803","Sonu2803#","dhairyaj_MyfirstDB");
+        if(mysqli_connect_error())
+        {
+            $error='<div class="alert alert-danger" role="alert"><b>Failed To connect to Database. Try again later :(</b><p></p> </div>';
+        }
+        else
+        {
+            //Database Connected...
+        
+            if($_POST['signinup']==1)//Sign UP...........
+            {
+                
+                $query="SELECT id FROM secretdiary WHERE username='".mysqli_real_escape_string($link,$_POST['username'])."'";
+                $result=mysqli_query($link,$query);
+                
+                if(mysqli_num_rows($result)>0)
+                {
+                    $error='<div class="alert alert-danger" role="alert"><b>Username already taken. Try another one!</b><p></p> </div>';
+                }
+                else
+                {
+                   
+                    //unique username exists..
+                    $query="INSERT INTO secretdiary (username,email,password) VALUES ('".mysqli_real_escape_string($link,$_POST['username'])."','".mysqli_real_escape_string($link,$_POST['email'])."','".md5($_POST['password'])."')";
+                    
+                    if(mysqli_query($link,$query))
+                    {
+                        
+                        $to = $_POST['email'];
+                        $subject = "Confirmation Email";
+                        
+                        $message = "This mail is to verify your account being opened :)";
+                        
+                        // Always set content-type when sending HTML email
+                        $headers = "MIME-Version: 1.0" . "\r\n";
+                        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                        
+                        // More headers
+                        $headers .= 'From: Dhairya Patel' . "\r\n";
+                        
+                        if($_POST['loggedin']=='on')
+                        {
+                            setcookie("username",$_POST['username'],time()+0.5*60*60);
+                        }
+                        else
+                        {
+                            session_start();
+                            $_SESSION['username']=$_POST['username'];
+                        }
+                        
+                        if (mail($to,$subject,$message))
+                        {
+                            $success='<div class="alert alert-success" role="alert"><p><b> Your Account is being successfully created!<br> A confirmation email is sent to you :)<br><a href="Diarypage.php">Go to your Diary</a></b></p></div>';
+                        }
+                       else
+                        {
+                            $error='<div class="alert alert-success" role="alert"><b>Your Account is being successfully created!<br><a href="Diarypage.php">Go to your Diary</a></b><p></p> </div>';
+                        }
+                        
+                        
+                        
+                    }
+                    else
+                    {
+                        $error='<div class="alert alert-danger" role="alert"><b>Some Internal error Occured! :(</b><p></p> </div>';
+                    }
+                }
+                
+            }
+            else //sign in page..
+            {
+                $query="SELECT id FROM secretdiary WHERE username='".mysqli_real_escape_string($link,$_POST['username'])."'";
+                $result=mysqli_query($link,$query);
+                
+                if(mysqli_num_rows($result)>0)
+                {
+                    $query="SELECT password FROM secretdiary WHERE username='".mysqli_real_escape_string($link,$_POST['username'])."'";
+                    $result=mysqli_query($link,$query);
+                    $row=mysqli_fetch_array($result);
+            
+                    if($row['password']==md5($_POST['password']))
+                    {
+                        if($_POST['loggedin']=='on')
+                        {
+                            setcookie("username",$_POST['username'],time()+0.5*60*60);
+                        }
+                        else
+                        {
+                        session_start();
+                        $_SESSION['username']=$_POST['username'];
+                        }
+                        header("Location:Diarypage.php");
+                    }
+                    else
+                    {
+                        $error='<div class="alert alert-danger" role="alert"><b>Incorrect Password! :(</b><p></p> </div>';
+                    }
+                }
+                else
+                {
+                    $error='<div class="alert alert-danger" role="alert"><b>Account Not found Sign Up Instead!</b><p></p> </div>';
+                }
+            }
+        
+        }
+        
+    }
+    
+}
+
+?>
 <html lang="en">
   <head>
     <!-- Required meta tags -->
@@ -113,6 +248,8 @@
                   <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="Your email">
                   <small id="emailHelp" class="form-text text-muted" style="text-align:left;color:black">We'll never share your email with anyone else.</small>
                   </div>
+                  <input type="hidden" id="signinup" name="signinup" value="0">
+
                 <div class="form-group">
                   <!-- <label for="exampleInputPassword1">Password</label> -->
                   <input type="password" class="form-control" name="password" id="password" placeholder="Password">
@@ -128,7 +265,7 @@
                 <a id="login" >Log In.</a><a id="signup" style="display:none;" >Sign Up.</a>
                 <p></p>
 
-                <div id="error"></div>
+                <div id="error"><?php echo $error;?><?php echo $success;?> <?php echo $_SESSION['username'];?></div>
                 
          </form>
 
@@ -180,6 +317,11 @@
        if($("#password").val()=='')
        {
          error+="> Please Enter password.<br>";
+       }
+       
+       if($("#email").is(":visible"))
+       {
+           document.getElementById('signinup').value = 1 ;
        }
        
        if(error=='')
