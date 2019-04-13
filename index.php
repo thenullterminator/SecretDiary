@@ -23,7 +23,7 @@ if($_POST)
     else
     {    
         
-        $link =mysqli_connect("localhost","dhairyaj_djp2803","Sonu2803#","dhairyaj_MyfirstDB");
+        $link =mysqli_connect("localhost","","","");
         if(mysqli_connect_error())
         {
             $error='<div class="alert alert-danger" role="alert"><b>Failed To connect to Database. Try again later :(</b><p></p> </div>';
